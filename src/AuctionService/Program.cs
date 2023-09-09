@@ -2,6 +2,7 @@ using AuctionService.Data;
 using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Connections;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 var auctionsSettings = builder.Configuration["Auctions:ConnectionSettings"];
 
-builder.Services.AddDbContext<AuctionDbContext>(options => {
+builder.Services.AddDbContext<AuctionDbContext>(options =>
+{
   options.UseNpgsql(auctionsSettings);
 });
 
@@ -20,5 +22,14 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.MapControllers();
+
+try
+{
+  DbInitializer.InitDb(app);
+}
+catch (Exception e)
+{
+  Console.WriteLine(e);
+}
 
 app.Run();

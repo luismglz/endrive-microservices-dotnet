@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
   options.UseNpgsql(auctionsSettings);
 });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

@@ -52,10 +52,8 @@ public class AuctionsController : ControllerBase
   {
 
     var auction = _mapper.Map<Auction>(auctionDto);
-
     auction.Seller = "Test";
     _context.Auctions.Add(auction);
-
     var isSuccessResult = await _context.SaveChangesAsync() > 0;
 
     if (!isSuccessResult) return BadRequest("Could not save changes");
@@ -66,6 +64,7 @@ public class AuctionsController : ControllerBase
       );
 
   }
+
 
   [HttpPut("{id}")]
   public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
@@ -90,6 +89,24 @@ public class AuctionsController : ControllerBase
     if (result) return Ok();
 
     return BadRequest("There was an error at update");
+  }
+
+
+  [HttpDelete("{id}")]
+  public async Task<ActionResult> DeleteAuction(Guid id)
+  {
+    var auction = await _context.Auctions.FindAsync(id);
+
+    if (auction is null) return NotFound();
+
+    //TODO: check seller == username
+
+    _context.Auctions.Remove(auction);
+    var result = await _context.SaveChangesAsync() > 0;
+
+    if (!result) return BadRequest("There was an error in deleting the auction");
+
+    return Ok();
   }
 
 }

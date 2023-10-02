@@ -1,4 +1,5 @@
 using System.Net;
+using Consumers;
 using MassTransit;
 using MongoDB.Driver;
 using MongoDB.Entities;
@@ -13,9 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
 builder.Services.AddMassTransit(config =>
 {
+
+  config.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+
+  config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+
   config.UsingRabbitMq((context, cfg) =>
   {
     cfg.ConfigureEndpoints(context);

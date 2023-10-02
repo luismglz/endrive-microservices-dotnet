@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Connections;
 using System.Diagnostics;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,13 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMassTransit(config =>
+{
+  config.UsingRabbitMq((context, cfg) =>
+  {
+    cfg.ConfigureEndpoints(context);
+  });
+});
 
 var app = builder.Build();
 

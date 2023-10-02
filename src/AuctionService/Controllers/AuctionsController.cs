@@ -3,6 +3,8 @@ using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +17,13 @@ public class AuctionsController : ControllerBase
 
   private readonly AuctionDbContext _context;
   private readonly IMapper _mapper;
+  private readonly IPublishEndpoint _publishEndpoint;
 
-  public AuctionsController(AuctionDbContext context, IMapper mapper)
+  public AuctionsController(AuctionDbContext context, IMapper mapper, IPublishEndpoint publishEndpoint)
   {
     _context = context;
     _mapper = mapper;
+    _publishEndpoint = publishEndpoint;
   }
 
   [HttpGet]
@@ -28,7 +32,8 @@ public class AuctionsController : ControllerBase
 
     var query = _context.Auctions.OrderBy(auction => auction.Item.Make).AsQueryable();
 
-    if(!string.IsNullOrEmpty(date)){
+    if (!string.IsNullOrEmpty(date))
+    {
       query = query.Where(auction => auction.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
     }
 
@@ -61,11 +66,16 @@ public class AuctionsController : ControllerBase
     _context.Auctions.Add(auction);
     var isSuccessResult = await _context.SaveChangesAsync() > 0;
 
+    var newAuction = _mapper.Map<AuctionDto>(auction);
+
+    //map created auction to be published
+    await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
+
     if (!isSuccessResult) return BadRequest("Could not save changes");
 
     return CreatedAtAction(
       nameof(GetAuctionById),
-      new { auction.Id }, _mapper.Map<AuctionDto>(auction)
+      new { auction.Id }, newAuction
       );
 
   }

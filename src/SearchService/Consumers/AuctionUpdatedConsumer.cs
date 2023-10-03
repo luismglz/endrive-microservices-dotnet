@@ -4,8 +4,8 @@ using MassTransit;
 using MongoDB.Entities;
 using SearchService.Models;
 
-namespace Consumers;
-public class AuctionUpdatedConsumer : IConsumer
+namespace SearchService;
+public class AuctionUpdatedConsumer : IConsumer<AuctionUpdated>
 {
 
   private readonly IMapper _mapper;

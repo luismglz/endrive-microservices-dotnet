@@ -121,6 +121,10 @@ public class AuctionsController : ControllerBase
     //TODO: check seller == username
 
     _context.Auctions.Remove(auction);
+
+    //Publish the deleted auction ID to search service update their data
+    await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
+
     var result = await _context.SaveChangesAsync() > 0;
 
     if (!result) return BadRequest("There was an error in deleting the auction");

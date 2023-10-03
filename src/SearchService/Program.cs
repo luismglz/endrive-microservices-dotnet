@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text;
-using Consumers;
 using MassTransit;
 using Polly;
 using Polly.Extensions.Http;

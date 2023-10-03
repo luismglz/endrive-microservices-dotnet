@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Connections;
 using System.Diagnostics;
 using MassTransit;
+using Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,10 @@ builder.Services.AddMassTransit(config =>
     options.UsePostgres();
     options.UseBusOutbox();
   });
+
+  config.AddConsumersFromNamespaceContaining<AuctionCreatedFaultConsumer>();
+
+  config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
 
   config.UsingRabbitMq((context, cfg) =>
   {

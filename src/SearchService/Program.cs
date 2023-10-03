@@ -1,12 +1,10 @@
 using System.Net;
+using System.Text;
 using Consumers;
 using MassTransit;
-using MongoDB.Driver;
-using MongoDB.Entities;
 using Polly;
 using Polly.Extensions.Http;
 using SearchService;
-using SearchService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +23,15 @@ builder.Services.AddMassTransit(config =>
 
   config.UsingRabbitMq((context, cfg) =>
   {
+    string queueEndpointName = builder.Configuration["Search:Queue:AuctionCreated"];
+
+    cfg.ReceiveEndpoint(queueEndpointName, endpoint =>
+    {
+      endpoint.UseMessageRetry(retry => retry.Interval(5, 5));
+      endpoint.ConfigureConsumer<AuctionCreatedConsumer>(context);
+    });
+
+
     cfg.ConfigureEndpoints(context);
   });
 });

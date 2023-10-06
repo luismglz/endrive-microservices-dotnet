@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Claims;
 using IdentityModel;
 using IdentityService.Models;
@@ -63,6 +64,10 @@ namespace IdentityService.Pages.Signup
                     });
 
                     RegisterSuccess = true;
+                }
+                else
+                {
+                    RegisterSuccess = false;
                 }
             }
 

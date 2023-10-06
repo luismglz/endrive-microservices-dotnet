@@ -5,13 +5,53 @@
   <partial name="_ValidationSummary" />
   <div class="row">
     <div class="col-6 offset-3">
+      @if (Model.RegisterSuccess)
+      {
+        <div class="alert alert-success mt-2">
+          <strong>Your account has been successfully created</strong> - You can now login
+        </div>
+      }
       <div class="card">
         <div class="card-header">
           <h2>Sign Up</h2>
         </div>
         <div class="card-body">
-          Form goes here
+          <form asp-page="/Account/Signup/Index">
+            <input type="hidden" asp-for="Input.ReturnUrl" />
+
+            <div class="form-group">
+              <label asp-for="Input.Username"></label>
+              <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
+            </div>
+            <div class="form-group">
+              <label asp-for="Input.Email"></label>
+              <input class="form-control" placeholder="Email" asp-for="Input.Email">
+            </div>
+            <div class="form-group">
+              <label asp-for="Input.FirstName">First name</label>
+              <input class="form-control" placeholder="FirstName" asp-for="Input.FirstName">
+            </div>
+            <div class="form-group">
+              <label asp-for="Input.LastName">Last name</label>
+              <input class="form-control" placeholder="LastName" asp-for="Input.LastName">
+            </div>
+            <div class="form-group">
+              <label asp-for="Input.Password"></label>
+              <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password"
+                autocomplete="off">
+            </div>
+
+            <p class="pb-2 d-block">Already have an account?&nbsp;
+              <a asp-page="../Login/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                Log in
+              </a>
+            </p>
+
+            <button class="btn btn-primary" name="Input.Button" value="signup">Sign Up</button>
+            <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
+          </form>
         </div>
+
       </div>
     </div>
   </div>

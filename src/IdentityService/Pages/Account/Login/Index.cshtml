@@ -29,9 +29,10 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="Input.Password"></label>
-                                <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
+                                <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password"
+                                    autocomplete="off">
                             </div>
-                            
+
                             @if (Model.View.AllowRememberLogin)
                             {
                                 <div class="form-group">
@@ -43,10 +44,12 @@
                                     </div>
                                 </div>
                             }
-                            <p class="pb-2 d-block">Don't have an account?&nbsp;<a asp-page="../Signup/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">Sign Up
-                            </a>
+                            <p class="pb-2 d-block">Don't have an account?&nbsp;
+                                <a asp-page="../Signup/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                    Sign Up
+                                </a>
                             </p>
-                            
+
                             <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
                             <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
                         </form>
@@ -67,10 +70,9 @@
                             @foreach (var provider in Model.View.VisibleExternalProviders)
                             {
                                 <li class="list-inline-item">
-                                    <a class="btn btn-secondary"
-                                       asp-page="/ExternalLogin/Challenge"
-                                       asp-route-scheme="@provider.AuthenticationScheme"
-                                       asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                    <a class="btn btn-secondary" asp-page="/ExternalLogin/Challenge"
+                                        asp-route-scheme="@provider.AuthenticationScheme"
+                                        asp-route-returnUrl="@Model.Input.ReturnUrl">
                                         @provider.DisplayName
                                     </a>
                                 </li>

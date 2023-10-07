@@ -1,16 +1,15 @@
 using AuctionService.Data;
-using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Connections;
-using System.Diagnostics;
 using MassTransit;
 using Consumers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the app instance container.
 builder.Services.AddControllers();
 var auctionsSettings = builder.Configuration["Auctions:ConnectionSettings"];
+var IdentityServiceUrl = builder.Configuration["Auctions:IdentityServiceUrl"];
 
 builder.Services.AddDbContext<AuctionDbContext>(options =>
 {
@@ -38,9 +37,21 @@ builder.Services.AddMassTransit(config =>
 
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+  options.Authority = IdentityServiceUrl;
+  options.RequireHttpsMetadata = false;
+  options.TokenValidationParameters.ValidateAudience = false;
+  options.TokenValidationParameters.NameClaimType = "username";
+
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

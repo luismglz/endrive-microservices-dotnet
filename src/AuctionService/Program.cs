@@ -1,8 +1,8 @@
 using AuctionService.Data;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
-using Consumers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuctionService;
 
 var builder = WebApplication.CreateBuilder(args);
 

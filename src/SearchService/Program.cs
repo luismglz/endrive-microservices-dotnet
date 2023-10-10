@@ -24,6 +24,12 @@ builder.Services.AddMassTransit(config =>
   {
     string queueEndpointName = builder.Configuration["Search:Queue:AuctionCreated"];
 
+    cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+{
+  host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+  host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+});
+
     cfg.ReceiveEndpoint(queueEndpointName, endpoint =>
     {
       endpoint.UseMessageRetry(retry => retry.Interval(5, 5));

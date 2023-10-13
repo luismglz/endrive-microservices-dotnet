@@ -1,7 +1,7 @@
 using Contracts;
 using MassTransit;
 
-namespace Consumers;
+namespace AuctionService;
 public class AuctionCreatedFaultConsumer : IConsumer<Fault<AuctionCreated>>
 {
   public async Task Consume(ConsumeContext<Fault<AuctionCreated>> context)

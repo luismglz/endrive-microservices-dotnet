@@ -1,3 +1,4 @@
+using BiddingService;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Driver;
@@ -16,9 +17,8 @@ var IdentityServiceUrl = builder.Configuration["Bidding:IdentityServiceUrl"];
 builder.Services.AddMassTransit(config =>
 {
 
-
+  config.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
   config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("bids", false));
-
   config.UsingRabbitMq((context, cfg) =>
   {
 
@@ -27,7 +27,6 @@ builder.Services.AddMassTransit(config =>
       host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
       host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
     });
-
 
     cfg.ConfigureEndpoints(context);
   });

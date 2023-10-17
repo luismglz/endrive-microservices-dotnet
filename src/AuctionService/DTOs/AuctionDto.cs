@@ -12,7 +12,7 @@ public class AuctionDto
 
   public int SoldAmount { get; set; }
 
-  public int? CurrentHighBid { get; set; }
+  public int CurrentHighBid { get; set; }
 
   public DateTime CreatedAt { get; set; }
 

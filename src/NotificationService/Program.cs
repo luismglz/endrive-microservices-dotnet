@@ -1,10 +1,10 @@
 using MassTransit;
+using NotificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit(config =>
 {
-
   config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("nt", false));
   config.UsingRabbitMq((context, cfg) =>
   {
@@ -17,12 +17,13 @@ builder.Services.AddMassTransit(config =>
 
     cfg.ConfigureEndpoints(context);
   });
-
 });
+
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
 
-
+app.MapHub<NotificationHub>("/notifications");
 
 app.Run();

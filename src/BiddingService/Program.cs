@@ -1,4 +1,5 @@
 using BiddingService;
+using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Driver;
@@ -45,17 +46,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHostedService<CheckAuctionFinished>();
+builder.Services.AddScoped<GrpcAuctionClient>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
-
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
+
+
 
 await DB.InitAsync("bidDB", MongoClientSettings.FromConnectionString(biddingServiceSettings));
 

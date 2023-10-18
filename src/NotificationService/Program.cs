@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit(config =>
 {
+  config.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
   config.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("nt", false));
   config.UsingRabbitMq((context, cfg) =>
   {
